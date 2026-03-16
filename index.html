@@ -29,7 +29,7 @@
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -96,31 +96,34 @@
    TOKENS
 ───────────────────────────────────────── */
 :root {
-  --bg:        #04060E;
-  --bg-1:      #080B16;
-  --bg-2:      #0C1020;
-  --bg-3:      #10142A;
-  --surface:   rgba(255,255,255,0.035);
-  --surface-h: rgba(255,255,255,0.06);
-  --border:    rgba(255,255,255,0.06);
-  --border-2:  rgba(255,255,255,0.11);
-  --ink:       #EEEEF0;
-  --ink-2:     rgba(238,238,240,0.65);
-  --ink-3:     rgba(238,238,240,0.42);
-  --ink-4:     rgba(238,238,240,0.18);
-  --blue:      #4F6EF7;
-  --blue-l:    #7B94FF;
-  --blue-dim:  rgba(79,110,247,0.12);
-  --blue-glow: rgba(79,110,247,0.22);
-  --teal:      #00D4C0;
-  --teal-dim:  rgba(0,212,192,0.10);
-  --teal-glow: rgba(0,212,192,0.18);
-  --purple:    #9B6DFF;
-  --pur-dim:   rgba(155,109,255,0.12);
-  --green:     #3DD68C;
-  --green-dim: rgba(61,214,140,0.10);
-  --red:       #FF6B6B;
-  --red-dim:   rgba(255,107,107,0.10);
+  --bg:        #02040C;
+  --bg-1:      #060915;
+  --bg-2:      #0A0E1E;
+  --bg-3:      #0E1228;
+  --surface:   rgba(255,255,255,0.04);
+  --surface-h: rgba(255,255,255,0.07);
+  --border:    rgba(255,255,255,0.07);
+  --border-2:  rgba(255,255,255,0.13);
+  --ink:       #F0F0F4;
+  --ink-2:     rgba(240,240,244,0.7);
+  --ink-3:     rgba(240,240,244,0.45);
+  --ink-4:     rgba(240,240,244,0.16);
+  --blue:      #4D6BF5;
+  --blue-l:    #7C96FF;
+  --blue-dim:  rgba(77,107,245,0.14);
+  --blue-glow: rgba(77,107,245,0.26);
+  --teal:      #00DCC8;
+  --teal-dim:  rgba(0,220,200,0.12);
+  --teal-glow: rgba(0,220,200,0.22);
+  --purple:    #A070FF;
+  --pur-dim:   rgba(160,112,255,0.13);
+  --amber:     #F5A623;
+  --amber-dim: rgba(245,166,35,0.12);
+  --green:     #2ECC7A;
+  --green-dim: rgba(46,204,122,0.12);
+  --red:       #FF5F5F;
+  --red-dim:   rgba(255,95,95,0.11);
+  --font-head: 'Syne', 'Inter', system-ui, sans-serif;
   --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-2xl: 28px;
 }
 
@@ -247,16 +250,18 @@ body::after {
    TYPOGRAPHY
 ───────────────────────────────────────── */
 .t-hero {
-  font-size:clamp(58px,7vw,100px);
+  font-family:var(--font-head);
+  font-size:clamp(56px,7vw,102px);
   font-weight:800;
   letter-spacing:-4px;
-  line-height:0.97;
+  line-height:0.95;
 }
 .t-h2 {
-  font-size:clamp(38px,4.2vw,60px);
+  font-family:var(--font-head);
+  font-size:clamp(36px,4.2vw,62px);
   font-weight:700;
   letter-spacing:-2px;
-  line-height:1.07;
+  line-height:1.05;
 }
 .t-h3 { font-size:22px; font-weight:600; letter-spacing:-0.4px; line-height:1.3; }
 .t-h4 { font-size:16px; font-weight:600; letter-spacing:-0.2px; }
@@ -538,6 +543,41 @@ body::after {
 .section-sm { padding:80px 0; }
 .section-header { margin-bottom:72px; }
 .section-bg-alt { background:var(--bg-1); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+
+/* ─────────────────────────────────────────
+   WHY AI AGENTS
+───────────────────────────────────────── */
+.why-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.why-card {
+  background:var(--bg-1); border:1px solid var(--border);
+  border-radius:var(--r-xl); padding:32px 28px;
+  transition:border-color 0.25s, transform 0.25s, background 0.25s;
+  position:relative; overflow:hidden;
+}
+.why-card::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:1.5px;
+  background:linear-gradient(90deg,var(--blue),var(--teal));
+  opacity:0; transition:opacity 0.3s;
+}
+.why-card:hover { border-color:var(--border-2); transform:translateY(-4px); background:var(--bg-2); }
+.why-card:hover::after { opacity:1; }
+.why-icon {
+  width:48px; height:48px; border-radius:var(--r-md);
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; margin-bottom:18px;
+}
+.why-card h3 { font-size:16px; font-weight:600; letter-spacing:-0.2px; margin-bottom:10px; }
+.why-card p  { font-size:13.5px; color:var(--ink-3); line-height:1.78; }
+
+@media(max-width:1024px) {
+  .why-grid { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:768px) {
+  .why-grid { grid-template-columns:1fr; }
+}
 
 /* ─────────────────────────────────────────
    PROBLEM / SOLUTION
@@ -988,12 +1028,12 @@ footer {
   </div>
 
   <h1 class="t-hero hero-title" id="hero-heading">
-    <span class="g1">Your business,</span><br>
-    <span class="g2">running on AI.</span>
+    <span class="g1">Agents that work.</span><br>
+    <span class="g2">While you sleep.</span>
   </h1>
 
   <p class="t-body hero-sub">
-    Done-for-you AI automations that capture leads, handle customers, and run your operations 24/7 — so you scale without hiring.
+    AI agents never call in sick, never clock out, and cost 90% less than hiring. We deploy them inside your business in under 14 days — so you earn more without spending more.
   </p>
 
   <div class="hero-ctas">
@@ -1005,22 +1045,22 @@ footer {
     <ul class="trust-row" aria-label="Key benefits" style="list-style:none;">
       <li class="trust-item">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Delivered in 7–14 days
+        Works 24/7, 365 days a year
       </li>
       <li class="trust-sep" aria-hidden="true"></li>
       <li class="trust-item">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        No technical skills needed
+        90% cheaper than hiring staff
+      </li>
+      <li class="trust-sep" aria-hidden="true"></li>
+      <li class="trust-item">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Live in 7–14 days
       </li>
       <li class="trust-sep" aria-hidden="true"></li>
       <li class="trust-item">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         30-day money-back guarantee
-      </li>
-      <li class="trust-sep" aria-hidden="true"></li>
-      <li class="trust-item">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Monthly support included
       </li>
     </ul>
   </div>
@@ -1032,21 +1072,21 @@ footer {
       <div class="hc-val g2" id="hc1" aria-live="polite">0</div>
       <div class="hc-sub">per client, on average</div>
       <div class="hc-bar-wrap" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" aria-label="85% capacity"><div class="hc-bar" id="hb1"></div></div>
-      <div class="hc-status"><div class="hc-dot" aria-hidden="true"></div><div class="hc-status-text">Live automations running</div></div>
+      <div class="hc-status"><div class="hc-dot" aria-hidden="true"></div><div class="hc-status-text">Agents running right now</div></div>
     </div>
     <div class="hc hc2">
-      <div class="hc-label">Lead response time</div>
+      <div class="hc-label">Response time to leads</div>
       <div class="hc-val" style="background:linear-gradient(95deg,var(--teal),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="hc2" aria-live="polite">0s</div>
-      <div class="hc-sub">avg AI reply to new leads</div>
+      <div class="hc-sub">vs. 8–24 hrs without AI</div>
       <div class="hc-bar-wrap" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" aria-label="65% speed metric"><div class="hc-bar" id="hb2"></div></div>
       <div class="hc-status"><div class="hc-dot" aria-hidden="true"></div><div class="hc-status-text">All systems operational</div></div>
     </div>
     <div class="hc hc3">
-      <div class="hc-label">Conversion lift</div>
-      <div class="hc-val" style="background:linear-gradient(95deg,var(--purple),var(--blue-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="hc3" aria-live="polite">0×</div>
-      <div class="hc-sub">more conversions with AI</div>
-      <div class="hc-bar-wrap" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="75% conversion metric"><div class="hc-bar" id="hb3"></div></div>
-      <div class="hc-status"><div class="hc-dot" aria-hidden="true"></div><div class="hc-status-text">Optimising in real-time</div></div>
+      <div class="hc-label">Saved vs. hiring staff</div>
+      <div class="hc-val" style="background:linear-gradient(95deg,var(--amber),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="hc3" aria-live="polite">$0</div>
+      <div class="hc-sub">avg monthly saving per client</div>
+      <div class="hc-bar-wrap" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" aria-label="90% cost saving"><div class="hc-bar" id="hb3" style="background:linear-gradient(90deg,var(--amber),var(--teal));"></div></div>
+      <div class="hc-status"><div class="hc-dot" aria-hidden="true"></div><div class="hc-status-text">Cost optimised</div></div>
     </div>
   </div>
 </section>
@@ -1086,8 +1126,54 @@ footer {
   </div>
 </div>
 
+<!-- ── WHY AI AGENTS ── -->
+<section class="section" id="why" aria-labelledby="why-heading">
+  <div class="wrap">
+    <div data-s style="text-align:center;margin-bottom:72px;">
+      <div class="eyebrow" aria-hidden="true" style="justify-content:center;">Why AI agents</div>
+      <h2 class="t-h2" id="why-heading" style="text-align:center;">
+        <span class="g1">The unfair advantage</span><br>
+        <span class="g2">every business deserves.</span>
+      </h2>
+      <p class="t-body" style="margin-top:16px;max-width:540px;margin-left:auto;margin-right:auto;">Your competitors are already automating. AI agents are faster, cheaper, and more reliable than any human hire — and they scale instantly.</p>
+    </div>
+    <div class="why-grid" data-stagger>
+      <div class="why-card">
+        <div class="why-icon" style="background:var(--blue-dim);color:var(--blue-l);">🌙</div>
+        <h3>They never sleep</h3>
+        <p>Your AI agents are active at 3am on a Sunday just as effectively as Monday morning at 9. Every lead captured, every question answered — around the clock, without overtime pay.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon" style="background:var(--amber-dim);color:var(--amber);">💰</div>
+        <h3>A fraction of the cost</h3>
+        <p>A full-time employee costs $3,000–$8,000/month. An AI agent handling the same workload runs for under $300/month. That's not a small saving — that's a structural advantage.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon" style="background:var(--teal-dim);color:var(--teal);">⚡</div>
+        <h3>10× faster than humans</h3>
+        <p>AI responds in seconds, not hours. Studies show 78% of buyers go with the first business that responds. Speed wins deals. AI gives you that speed, every single time.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon" style="background:var(--green-dim);color:var(--green);">📈</div>
+        <h3>Scales without limits</h3>
+        <p>Handle 10 customers or 10,000 simultaneously — with zero extra cost. As your business grows, your AI agents grow with it. No hiring, no training, no lag time.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon" style="background:var(--pur-dim);color:var(--purple);">🎯</div>
+        <h3>Zero human error</h3>
+        <p>Agents follow your process perfectly, every time. No forgotten follow-ups, no incorrect data entry, no missed appointments. Consistent quality that builds trust with your customers.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon" style="background:var(--blue-dim);color:var(--blue-l);">🔮</div>
+        <h3>Every business needs this</h3>
+        <p>In 3 years, businesses without AI agents will struggle to compete on price, speed, or service quality. The question isn't whether to implement AI — it's whether to do it now or too late.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ── PROBLEM / SOLUTION ── -->
-<section class="section" aria-labelledby="problem-heading">
+<section class="section section-bg-alt" aria-labelledby="problem-heading">
   <div class="wrap">
     <div data-s>
       <div class="eyebrow" aria-hidden="true">The problem</div>
@@ -1101,6 +1187,7 @@ footer {
         <div class="ps-row"><div class="ps-ico x" aria-hidden="true">✕</div>Missing leads because nobody responded fast enough</div>
         <div class="ps-row"><div class="ps-ico x" aria-hidden="true">✕</div>Paying staff to copy-paste data between tools all week</div>
         <div class="ps-row"><div class="ps-ico x" aria-hidden="true">✕</div>Writing content from scratch every single week</div>
+        <div class="ps-row"><div class="ps-ico x" aria-hidden="true">✕</div>Paying $3,000–$8,000/mo per employee for repetitive tasks</div>
         <div class="ps-row"><div class="ps-ico x" aria-hidden="true">✕</div>Losing clients to faster, smarter competitors</div>
       </div>
       <div class="ps-col ps-col-b">
@@ -1109,7 +1196,8 @@ footer {
         <div class="ps-row"><div class="ps-ico ok" aria-hidden="true">✓</div>Every lead gets a personalised reply within 60 seconds</div>
         <div class="ps-row"><div class="ps-ico ok" aria-hidden="true">✓</div>Workflows sync your tools automatically — zero manual effort</div>
         <div class="ps-row"><div class="ps-ico ok" aria-hidden="true">✓</div>AI generates and schedules a week of content in minutes</div>
-        <div class="ps-row"><div class="ps-ico ok" aria-hidden="true">✓</div>Voice AI answers calls and books appointments non-stop</div>
+        <div class="ps-row"><div class="ps-ico ok" aria-hidden="true">✓</div>Replace costly roles with agents running for under $300/mo</div>
+        <div class="ps-row"><div class="ps-ico ok" aria-hidden="true">✓</div>Stay ahead — while competitors are still figuring AI out</div>
       </div>
     </div>
   </div>
@@ -1120,7 +1208,7 @@ footer {
   <div class="wrap">
     <div class="metrics" data-stagger>
       <div class="metric"><div class="metric-num" id="m1" aria-live="polite">0+</div><div class="metric-label">Hours saved per<br>week, per client</div></div>
-      <div class="metric"><div class="metric-num" id="m2" aria-live="polite">0×</div><div class="metric-label">More lead conversions<br>with instant AI replies</div></div>
+      <div class="metric"><div class="metric-num" id="m2" aria-live="polite">0%</div><div class="metric-label">Cheaper than a<br>full-time hire</div></div>
       <div class="metric"><div class="metric-num" id="m3" aria-live="polite">0s</div><div class="metric-label">Average AI response<br>time to new leads</div></div>
       <div class="metric"><div class="metric-num" id="m4" aria-live="polite">0</div><div class="metric-label">Days average time<br>to go live</div></div>
     </div>
@@ -1478,16 +1566,19 @@ if (!prefersReducedMotion) {
 }
 
 /* ── COUNTER ── */
-function countUp(el, target, suffix, duration){
+function countUp(el, target, suffix, duration, dollar){
   if (!el) return;
-  if (prefersReducedMotion) { el.textContent=target+(suffix||''); return; }
+  if (prefersReducedMotion) {
+    el.textContent=(dollar?'$':'')+target.toLocaleString()+(suffix||'');
+    return;
+  }
   let start=null;
   const step=ts=>{
     if(!start) start=ts;
     const p=Math.min((ts-start)/duration,1);
     const ease=1-Math.pow(1-p,4);
     const val=Math.round(target*ease);
-    el.textContent=val+(suffix||'');
+    el.textContent=(dollar?'$':'')+val.toLocaleString()+(suffix||'');
     if(p<1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -1496,7 +1587,7 @@ function countUp(el, target, suffix, duration){
 const mObs=new IntersectionObserver(entries=>{
   if(entries[0].isIntersecting){
     countUp(document.getElementById('m1'),20,'+',1600);
-    countUp(document.getElementById('m2'),3,'×',1100);
+    countUp(document.getElementById('m2'),90,'%',1100);
     countUp(document.getElementById('m3'),60,'s',1300);
     countUp(document.getElementById('m4'),7,'',900);
     mObs.disconnect();
@@ -1509,7 +1600,7 @@ const hcObs=new IntersectionObserver(entries=>{
   if(entries[0].isIntersecting){
     countUp(document.getElementById('hc1'),20,'',1400);
     setTimeout(()=>countUp(document.getElementById('hc2'),60,'s',1200),200);
-    setTimeout(()=>countUp(document.getElementById('hc3'),3,'×',1000),400);
+    setTimeout(()=>countUp(document.getElementById('hc3'),5800,'',1400,true),400);
     if (!prefersReducedMotion) {
       setTimeout(()=>{ document.getElementById('hb1').style.width='85%'; },600);
       setTimeout(()=>{ document.getElementById('hb2').style.width='65%'; },800);
