@@ -316,32 +316,7 @@ a { text-decoration:none; color:inherit; }
   .marquee-track { animation: none; }
 }
 
-/* ─────────────────────────────────────────
-   CUSTOM CURSOR
-───────────────────────────────────────── */
-#cursor {
-  width:10px; height:10px;
-  background:var(--ink);
-  border-radius:50%;
-  position:fixed; top:0; left:0;
-  pointer-events:none; z-index:9999;
-  transform:translate(-50%,-50%);
-  transition:transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
-  mix-blend-mode:difference;
-}
-#cursor-ring {
-  width:36px; height:36px;
-  border:1px solid rgba(255,255,255,0.25);
-  border-radius:50%;
-  position:fixed; top:0; left:0;
-  pointer-events:none; z-index:9998;
-  transform:translate(-50%,-50%);
-  transition:transform 0.18s cubic-bezier(0.16,1,0.3,1),
-             width 0.25s ease, height 0.25s ease,
-             border-color 0.2s ease;
-}
-body.cursor-hover #cursor { width:18px; height:18px; }
-body.cursor-hover #cursor-ring { width:52px; height:52px; border-color:rgba(79,110,247,0.5); }
+
 
 /* ─────────────────────────────────────────
    NOISE TEXTURE OVERLAY
@@ -1339,7 +1314,6 @@ footer {
   .process-steps { grid-template-columns:1fr; }
   .faq-grid { grid-template-columns:1fr; }
   .hero-cards { grid-template-columns:1fr; }
-  #cursor,#cursor-ring { display:none; }
   body { cursor:auto; }
   .btn { cursor:pointer; }
   .hero { padding:120px 20px 80px; }
@@ -1358,9 +1332,7 @@ footer {
 <!-- Skip to content -->
 <a href="#main" class="skip-link">Skip to main content</a>
 
-<!-- CURSOR -->
-<div id="cursor" aria-hidden="true"></div>
-<div id="cursor-ring" aria-hidden="true"></div>
+
 
 <!-- AURORA -->
 <div class="aurora" aria-hidden="true">

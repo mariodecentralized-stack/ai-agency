@@ -422,9 +422,7 @@ export default function App() {
 {/* Skip to content */}
 <a href="#main" className="skip-link">Skip to main content</a>
 
-{/* CURSOR */}
-<div id="cursor" aria-hidden="true"></div>
-<div id="cursor-ring" aria-hidden="true"></div>
+
 
 {/* AURORA */}
 <div className="aurora" aria-hidden="true">
