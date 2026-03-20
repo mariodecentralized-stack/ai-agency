@@ -1,98 +1,4 @@
-<!doctype html>
-<html lang="en">
-  <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AgentCy — AI Automation for Growing Businesses</title>
-<meta name="description" content="Done-for-you AI automations that capture leads, handle customers, and run your operations 24/7. Save 20+ hours/week without hiring.">
-
-<!-- Canonical -->
-<link rel="canonical" href="https://aibymario.com/">
-
-<!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" href="/favicon.svg">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://aibymario.com/">
-<meta property="og:title" content="AgentCy — AI Automation for Growing Businesses">
-<meta property="og:description" content="Done-for-you AI automations that capture leads, handle customers, and run your operations 24/7. Save 20+ hours/week without hiring.">
-<meta property="og:image" content="https://aibymario.com/og-image.png">
-<meta property="og:site_name" content="AgentCy">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AgentCy — AI Automation for Growing Businesses">
-<meta name="twitter:description" content="Done-for-you AI automations that capture leads, handle customers, and run your operations 24/7.">
-<meta name="twitter:image" content="https://aibymario.com/og-image.png">
-
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<!-- JSON-LD Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://aibymario.com/#organization",
-      "name": "AgentCy",
-      "url": "https://aibymario.com",
-      "email": "hello@aibymario.com",
-      "description": "Done-for-you AI automations for growing businesses — chatbots, lead follow-up, voice AI, content pipelines and more.",
-      "sameAs": []
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://aibymario.com/#website",
-      "url": "https://aibymario.com",
-      "name": "AgentCy",
-      "publisher": { "@id": "https://aibymario.com/#organization" }
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Do I need to know anything about AI or tech?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Not at all. We handle 100% of the technical setup. You just describe your business and what you want to solve — we build everything. You'll get a plain-English walkthrough at the end." }
-        },
-        {
-          "@type": "Question",
-          "name": "How long does it take to go live?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Most projects go live within 7–14 business days from your discovery call. The Scale package takes up to 21 days. You'll receive regular progress updates throughout the build." }
-        },
-        {
-          "@type": "Question",
-          "name": "What if it doesn't work for my business?",
-          "acceptedAnswer": { "@type": "Answer", "text": "We offer a 30-day results guarantee. If the system doesn't perform as promised after we've worked to fix it, we'll refund your full setup fee. No questions asked." }
-        },
-        {
-          "@type": "Question",
-          "name": "What tools do you use — and do I pay for them?",
-          "acceptedAnswer": { "@type": "Answer", "text": "We use Make, n8n, Claude API, Voiceflow, Vapi, GoHighLevel, and others. Some have free tiers; most cost $20–$100/month. We give you the full cost breakdown before we start." }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I add more automations later?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Absolutely — most clients start with one and add more after seeing results. Existing clients get discounted rates on all additional automations added to their retainer." }
-        },
-        {
-          "@type": "Question",
-          "name": "What types of businesses do you work with?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Clinics, gyms, restaurants, real estate agencies, coaches, marketing agencies, and e-commerce brands. If you have repetitive tasks and customer touchpoints, we can automate them." }
-        }
-      ]
-    }
-  ]
-}
-</script>
-
-<style>
 /* ─────────────────────────────────────────
    TOKENS
 ───────────────────────────────────────── */
@@ -947,6 +853,7 @@ input[type=range]::-webkit-slider-thumb {
 @media(max-width: 768px) {
   .roi-wrap { grid-template-columns: 1fr; padding: 32px 24px; }
 }
+/* ─────────────────────────────────────────
    SERVICES
 ───────────────────────────────────────── */
 .svc-grid {
@@ -1352,11 +1259,309 @@ footer {
   .footer-inner { flex-direction:column; align-items:flex-start; gap:12px; }
   .guarantee { flex-direction:column; align-items:flex-start; }
 }
-</style>
 
-</head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
+
+
+/* ── BACK TO TOP CSS ── */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 998;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(4,6,14,0.7);
+  border: 1px solid var(--border-2);
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16,1,0.3,1), transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.2s, border-color 0.2s, color 0.2s;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  background: var(--surface-h);
+  border-color: rgba(79,110,247,0.5);
+  color: var(--blue-l);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+@media(max-width: 768px) {
+  .back-to-top { bottom: 16px; left: 16px; width: 44px; height: 44px; }
+}
+
+
+
+/* ── FLOATING AI WIDGET CSS ── */
+#ai-widget-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: 'Inter', sans-serif;
+}
+
+.ai-widget-bubble {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  box-shadow: 0 8px 24px rgba(0, 212, 192, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ai-widget-bubble:hover {
+  transform: scale(1.1);
+}
+
+.ai-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 12px;
+  height: 12px;
+  background: var(--green);
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.ai-widget-panel {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 320px;
+  height: 440px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: bottom right;
+}
+
+.ai-widget-panel.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.ai-widget-header {
+  padding: 16px;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-widget-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ai-widget-close {
+  background: transparent;
+  border: none;
+  color: var(--ink-3);
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.ai-widget-close:hover {
+  color: var(--ink);
+}
+
+.ai-widget-body {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-widget-body::-webkit-scrollbar {
+  width: 6px;
+}
+.ai-widget-body::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+  border-radius: 3px;
+}
+
+.chat-msg {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  line-height: 1.5;
+  animation: msgPop 0.3s cubic-bezier(0.16,1,0.3,1) backwards;
+  word-wrap: break-word;
+}
+
+@keyframes msgPop {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-msg.ai {
+  align-self: flex-start;
+  background: var(--bg-2);
+  color: var(--ink-2);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-msg.user {
+  align-self: flex-end;
+  background: var(--blue-dim);
+  color: var(--blue-l);
+  border: 1px solid rgba(79,110,247,0.3);
+  border-bottom-right-radius: 4px;
+}
+
+.chat-typing {
+  align-self: flex-start;
+  background: var(--bg-2);
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  border-bottom-left-radius: 4px;
+  display: flex;
+  gap: 4px;
+  border: 1px solid var(--border);
+}
+.chat-thought {
+  align-self: flex-start;
+  font-size: 10px;
+  color: var(--teal);
+  font-family: monospace;
+  margin-bottom: 4px;
+  animation: msgPop 0.2s ease-out backwards;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--ink-3);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+.chat-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  align-items: flex-start;
+}
+.chat-choice-btn {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  color: var(--ink-2);
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-align: left;
+  animation: msgPop 0.3s backwards 0.2s;
+}
+.chat-choice-btn:hover {
+  background: var(--blue-dim);
+  border-color: rgba(79,110,247,0.4);
+  color: var(--blue-l);
+}
+
+.ai-widget-footer {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-2);
+}
+
+.ai-widget-input-form {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-widget-input-form input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font-size: 13px;
+  width: 100%;
+  margin-right: 8px;
+}
+
+.ai-widget-input-form input::placeholder {
+  color: var(--ink-4);
+}
+
+.ai-widget-send {
+  background: var(--blue);
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+
+.ai-widget-send:hover {
+  transform: scale(1.05);
+  background: var(--teal);
+}
+
+@media(max-width: 768px) {
+  #ai-widget-container { bottom: 16px; right: 16px; }
+  .ai-widget-panel { bottom: 70px; width: calc(100vw - 32px); height: min(500px, 70svh); }
+}
+
+
