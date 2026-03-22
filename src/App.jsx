@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.css';
 
 export default function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   useEffect(() => {
     // Injecting legacy JS directly for phase 1 of migration
     
@@ -32,21 +34,7 @@ export default function App() {
       document.getElementById('nav').classList.toggle('stuck',scrollY>30);
     },{passive:true});
     
-    /* ── MOBILE MENU ── */
-    const toggle = document.querySelector('.nav-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    toggle.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', open);
-      toggle.textContent = open ? '✕' : '☰';
-    });
-    mobileMenu.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.textContent = '☰';
-      });
-    });
+    /* ── MOBILE MENU (migrated to React state) ── */
     
     /* ── SCROLL REVEAL ── */
     if (!prefersReducedMotion) {
@@ -479,19 +467,21 @@ export default function App() {
     <div className="nav-right">
       <a href="https://calendly.com/mariodecentralize/30min" target="_blank" className="btn btn-outline btn-sm">Book a Call</a>
       <a href="#pricing" className="btn btn-white btn-sm">Get started <span className="arr" aria-hidden="true">→</span></a>
-      <button className="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">☰</button>
+      <button className="nav-toggle" aria-label="Open menu" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        {isMobileMenuOpen ? '✕' : '☰'}
+      </button>
     </div>
   </div>
 </nav>
 
 {/* Mobile menu */}
-<div id="mobile-menu" className="mobile-menu" role="dialog" aria-label="Navigation menu">
-  <a href="#why">Why AI</a>
-  <a href="#services">Services</a>
-  <a href="#process">Process</a>
-  <a href="#pricing">Pricing</a>
-  <a href="#faq">FAQ</a>
-  <a href="https://calendly.com/mariodecentralize/30min" target="_blank">Book a Call</a>
+<div id="mobile-menu" className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`} role="dialog" aria-label="Navigation menu">
+  <a href="#why" onClick={() => setIsMobileMenuOpen(false)}>Why AI</a>
+  <a href="#services" onClick={() => setIsMobileMenuOpen(false)}>Services</a>
+  <a href="#process" onClick={() => setIsMobileMenuOpen(false)}>Process</a>
+  <a href="#pricing" onClick={() => setIsMobileMenuOpen(false)}>Pricing</a>
+  <a href="#faq" onClick={() => setIsMobileMenuOpen(false)}>FAQ</a>
+  <a href="https://calendly.com/mariodecentralize/30min" target="_blank" onClick={() => setIsMobileMenuOpen(false)}>Book a Call</a>
 </div>
 
 {/* ── HERO ── */}
@@ -544,21 +534,21 @@ export default function App() {
 
   {/* Dashboard stat cards */}
   <div className="hero-cards" aria-label="Key performance metrics">
-    <div className="hc hc1">
+    <div className="hc hc1" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
       <div className="hc-label">Hours saved / week</div>
       <div className="hc-val g2" id="hc1" aria-live="polite">0</div>
       <div className="hc-sub">per client, on average</div>
       <div className="hc-bar-wrap" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" aria-label="85% capacity"><div className="hc-bar" id="hb1"></div></div>
       <div className="hc-status"><div className="hc-dot" aria-hidden="true"></div><div className="hc-status-text">Agents running right now</div></div>
     </div>
-    <div className="hc hc2">
+    <div className="hc hc2" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
       <div className="hc-label">Response time to leads</div>
       <div className="hc-val" style={{ background: 'linear-gradient(95deg,var(--teal),var(--green))', webkitBackgroundClip: 'text', webkitTextFillColor: 'transparent', backgroundClip: 'text',  }} id="hc2" aria-live="polite">0s</div>
       <div className="hc-sub">vs. 8–24 hrs without AI</div>
       <div className="hc-bar-wrap" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" aria-label="65% speed metric"><div className="hc-bar" id="hb2"></div></div>
       <div className="hc-status"><div className="hc-dot" aria-hidden="true"></div><div className="hc-status-text">All systems operational</div></div>
     </div>
-    <div className="hc hc3">
+    <div className="hc hc3" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
       <div className="hc-label">Saved vs. hiring staff</div>
       <div className="hc-val" style={{ background: 'linear-gradient(95deg,var(--amber),var(--teal))', webkitBackgroundClip: 'text', webkitTextFillColor: 'transparent', backgroundClip: 'text',  }} id="hc3" aria-live="polite">$0</div>
       <div className="hc-sub">avg monthly saving per client</div>
