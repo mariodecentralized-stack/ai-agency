@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './index.css';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const didInit = useRef(false);
 
   useEffect(() => {
-    // Injecting legacy JS directly for phase 1 of migration
-    
-    
-    
-    
+    // Legacy DOM script attaches global listeners; guard against
+    // StrictMode's double effect invocation in dev.
+    if (didInit.current) return;
+    didInit.current = true;
+
+
     /* ── REDUCED MOTION ── */
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
@@ -33,6 +35,16 @@ export default function App() {
     window.addEventListener('scroll',()=>{
       document.getElementById('nav').classList.toggle('stuck',scrollY>30);
     },{passive:true});
+
+    /* ── STICKY MOBILE CTA ── */
+    const stickyCta = document.getElementById('sticky-cta');
+    if(stickyCta) {
+      window.addEventListener('scroll', () => {
+        const show = window.scrollY > window.innerHeight * 0.8;
+        stickyCta.classList.toggle('visible', show);
+        document.body.classList.toggle('has-sticky', show);
+      }, {passive:true});
+    }
     
     /* ── MOBILE MENU (migrated to React state) ── */
     
@@ -79,7 +91,26 @@ export default function App() {
     } else {
       document.querySelectorAll('[data-s],[data-stagger]').forEach(el=>el.classList.add('vis'));
     }
-    
+
+    /* ── TILT (cards with data-tilt) ── */
+    if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
+      document.querySelectorAll('[data-tilt]').forEach(el => {
+        const max = parseFloat(el.getAttribute('data-tilt-max')) || 4;
+        el.addEventListener('mouseenter', () => {
+          el.style.transition = 'transform 0.15s ease-out';
+        });
+        el.addEventListener('mousemove', e => {
+          const r = el.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          el.style.transform = `perspective(900px) rotateX(${(-py * max).toFixed(2)}deg) rotateY(${(px * max).toFixed(2)}deg)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
+        });
+      });
+    }
+
     /* ── COUNTER ── */
     function countUp(el, target, suffix, duration, dollar){
       if (!el) return;
@@ -116,30 +147,45 @@ export default function App() {
     const widgetPanel = document.getElementById('ai-widget-panel');
     const widgetClose = document.getElementById('ai-widget-close');
     const widgetMessages = document.getElementById('ai-widget-messages');
-    const widgetContainer = document.getElementById('ai-widget-container');
-    
+
     let widgetOpen = false;
     let widgetInitialized = false;
-    
-    widgetToggle.addEventListener('click', () => {
-      widgetOpen = !widgetOpen;
-      if(widgetOpen) {
-        widgetPanel.classList.add('open');
-        widgetContainer.setAttribute('aria-hidden', 'false');
+    const teaser = document.getElementById('ai-teaser');
+
+    function setWidgetOpen(open) {
+      widgetOpen = open;
+      widgetPanel.classList.toggle('open', open);
+      widgetPanel.setAttribute('aria-hidden', String(!open));
+      if(open) {
+        if(teaser) teaser.classList.remove('show');
+        sessionStorage.setItem('agentcy-teaser-done', '1');
         if(!widgetInitialized) {
           widgetInitialized = true;
           runSimulatedChat();
         }
-      } else {
-        widgetPanel.classList.remove('open');
-        widgetContainer.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    /* Teaser bubble: invite visitors into the live demo after 12s */
+    if(teaser && !sessionStorage.getItem('agentcy-teaser-done')) {
+      setTimeout(() => {
+        if(!widgetInitialized) teaser.classList.add('show');
+      }, 12000);
+      teaser.addEventListener('click', () => setWidgetOpen(true));
+    }
+
+    widgetToggle.addEventListener('click', () => setWidgetOpen(!widgetOpen));
+    widgetToggle.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setWidgetOpen(!widgetOpen);
       }
     });
-    
-    widgetClose.addEventListener('click', () => {
-      widgetOpen = false;
-      widgetPanel.classList.remove('open');
-      widgetContainer.setAttribute('aria-hidden', 'true');
+
+    widgetClose.addEventListener('click', () => setWidgetOpen(false));
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape' && widgetOpen) setWidgetOpen(false);
     });
     
     // Helper for simulated chat
@@ -299,9 +345,6 @@ export default function App() {
       });
     }
     
-    const metricsEl2=document.querySelector('.metrics');
-    if(metricsEl2) mObs.observe(metricsEl2);
-    
     const hcObs=new IntersectionObserver(entries=>{
       if(entries[0].isIntersecting){
         countUp(document.getElementById('hc1'),20,'',1400);
@@ -366,6 +409,9 @@ export default function App() {
     
         pgRun.disabled = false;
         pgRun.innerHTML = 'Run Automation <span class="arr" aria-hidden="true">→</span>';
+
+        const pgCta = document.getElementById('pg-cta');
+        if(pgCta) pgCta.classList.add('show');
       });
     }
     
@@ -427,12 +473,13 @@ export default function App() {
 
 
 {/* ── FLOATING AI WIDGET ── */}
-<div id="ai-widget-container" aria-label="Simulated AI Chat Demo" role="dialog" aria-hidden="true">
+<div id="ai-widget-container">
+  <div className="ai-teaser" id="ai-teaser" role="button" tabIndex="-1">👋 Curious? I'm a live AI demo — try me</div>
   <div className="ai-widget-bubble" id="ai-widget-toggle" aria-label="Open AI Demo" role="button" tabIndex="0">
     <span className="ai-icon">🤖</span>
     <span className="ai-dot"></span>
   </div>
-  <div className="ai-widget-panel" id="ai-widget-panel">
+  <div className="ai-widget-panel" id="ai-widget-panel" role="dialog" aria-label="Simulated AI Chat Demo" aria-hidden="true">
     <div className="ai-widget-header">
       <div className="ai-widget-title">
         <span className="ai-icon-sm">🤖</span> AgentCy Demo
@@ -465,7 +512,7 @@ export default function App() {
       <a href="#faq" className="nav-link" role="listitem">FAQ</a>
     </div>
     <div className="nav-right">
-      <a href="https://calendly.com/mariodecentralize/30min" target="_blank" className="btn btn-outline btn-sm">Book a Call</a>
+      <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm">Book a Call</a>
       <a href="#pricing" className="btn btn-white btn-sm">Get started <span className="arr" aria-hidden="true">→</span></a>
       <button className="nav-toggle" aria-label="Open menu" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
         {isMobileMenuOpen ? '✕' : '☰'}
@@ -481,7 +528,7 @@ export default function App() {
   <a href="#process" onClick={() => setIsMobileMenuOpen(false)}>Process</a>
   <a href="#pricing" onClick={() => setIsMobileMenuOpen(false)}>Pricing</a>
   <a href="#faq" onClick={() => setIsMobileMenuOpen(false)}>FAQ</a>
-  <a href="https://calendly.com/mariodecentralize/30min" target="_blank" onClick={() => setIsMobileMenuOpen(false)}>Book a Call</a>
+  <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>Book a Call</a>
 </div>
 
 {/* ── HERO ── */}
@@ -504,9 +551,10 @@ export default function App() {
   </p>
 
   <div className="hero-ctas">
-    <a href="#pricing" className="btn btn-white btn-lg">See packages <span className="arr" aria-hidden="true">→</span></a>
-    <a href="#services" className="btn btn-outline btn-lg">Explore services</a>
+    <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" className="btn btn-white btn-lg">Book a free strategy call <span className="arr" aria-hidden="true">→</span></a>
+    <a href="#pricing" className="btn btn-outline btn-lg">See packages</a>
   </div>
+  <div className="cta-micro">Free 30 minutes · No commitment · Walk away with a concrete automation plan</div>
 
   <div className="hero-trust">
     <ul className="trust-row" aria-label="Key benefits" style={{ listStyle: 'none',  }}>
@@ -543,14 +591,14 @@ export default function App() {
     </div>
     <div className="hc hc2" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
       <div className="hc-label">Response time to leads</div>
-      <div className="hc-val" style={{ background: 'linear-gradient(95deg,var(--teal),var(--green))', webkitBackgroundClip: 'text', webkitTextFillColor: 'transparent', backgroundClip: 'text',  }} id="hc2" aria-live="polite">0s</div>
+      <div className="hc-val" style={{ background: 'linear-gradient(95deg,var(--teal),var(--green))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} id="hc2" aria-live="polite">0s</div>
       <div className="hc-sub">vs. 8–24 hrs without AI</div>
       <div className="hc-bar-wrap" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" aria-label="65% speed metric"><div className="hc-bar" id="hb2"></div></div>
       <div className="hc-status"><div className="hc-dot" aria-hidden="true"></div><div className="hc-status-text">All systems operational</div></div>
     </div>
     <div className="hc hc3" data-tilt data-tilt-max="4" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
       <div className="hc-label">Saved vs. hiring staff</div>
-      <div className="hc-val" style={{ background: 'linear-gradient(95deg,var(--amber),var(--teal))', webkitBackgroundClip: 'text', webkitTextFillColor: 'transparent', backgroundClip: 'text',  }} id="hc3" aria-live="polite">$0</div>
+      <div className="hc-val" style={{ background: 'linear-gradient(95deg,var(--amber),var(--teal))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} id="hc3" aria-live="polite">$0</div>
       <div className="hc-sub">avg monthly saving per client</div>
       <div className="hc-bar-wrap" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" aria-label="90% cost saving"><div className="hc-bar" id="hb3" style={{ background: 'linear-gradient(90deg,var(--amber),var(--teal))',  }}></div></div>
       <div className="hc-status"><div className="hc-dot" aria-hidden="true"></div><div className="hc-status-text">Cost optimised</div></div>
@@ -697,7 +745,7 @@ export default function App() {
             <span>Team size (employees)</span>
             <span className="roi-val" id="roi-team-val">5</span>
           </div>
-          <input type="range" id="roi-team" min="1" max="50" value="5"/>
+          <input type="range" id="roi-team" min="1" max="50" defaultValue="5"/>
         </div>
 
         <div className="roi-group">
@@ -705,7 +753,7 @@ export default function App() {
             <span>Avg. hourly wage ($)</span>
             <span className="roi-val" id="roi-wage-val">$25/hr</span>
           </div>
-          <input type="range" id="roi-wage" min="10" max="100" value="25" step="5"/>
+          <input type="range" id="roi-wage" min="10" max="100" defaultValue="25" step="5"/>
         </div>
 
         <div className="roi-group">
@@ -713,14 +761,14 @@ export default function App() {
             <span>Hours spent on admin/repetitive tasks (per employee/week)</span>
             <span className="roi-val" id="roi-hours-val">10 hrs</span>
           </div>
-          <input type="range" id="roi-hours" min="2" max="30" value="10"/>
+          <input type="range" id="roi-hours" min="2" max="30" defaultValue="10"/>
         </div>
       </div>
 
       <div className="roi-results">
         <div className="roi-result-item">
           <div className="roi-result-label">You are currently spending</div>
-          <div className="roi-result-val" style={{ background: 'linear-gradient(95deg, var(--red) 0%, var(--amber) 100%)', webkitBackgroundClip: 'text', backgroundClip: 'text',  }} id="roi-cost-val">$5,000</div>
+          <div className="roi-result-val" style={{ background: 'linear-gradient(95deg, var(--red) 0%, var(--amber) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} id="roi-cost-val">$5,000</div>
           <div className="roi-result-sub">every month on tasks AI could do instantly.</div>
         </div>
         
@@ -730,6 +778,11 @@ export default function App() {
           <div className="roi-result-label">Estimated AI Savings</div>
           <div className="roi-result-val" id="roi-save-val">$4,500</div>
           <div className="roi-result-sub">per month (assuming 90% automation at a fraction of the cost).</div>
+        </div>
+
+        <div className="roi-cta">
+          <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" className="btn btn-blue">Get a plan to recover this <span className="arr" aria-hidden="true">→</span></a>
+          <div className="cta-micro">Free 30-min call — we'll map your exact savings</div>
         </div>
       </div>
     </div>
@@ -752,7 +805,7 @@ export default function App() {
       <div className="pg-input-zone">
         <label htmlFor="pg-input" className="t-label" style={{ display: 'block', marginBottom: '12px', color: 'var(--ink-2)',  }}>Simulate New Inbound Lead:</label>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap',  }}>
-          <input type="text" id="pg-input" className="pg-input" value="Hi, I need pricing for a 3-page website. Do you guys do SEO as well? - Sarah" aria-label="Simulate lead text"/>
+          <input type="text" id="pg-input" className="pg-input" defaultValue="Hi, I need pricing for a 3-page website. Do you guys do SEO as well? - Sarah" aria-label="Simulate lead text"/>
           <button id="pg-run-btn" className="btn btn-blue">Run Automation <span className="arr" aria-hidden="true">→</span></button>
         </div>
       </div>
@@ -794,6 +847,11 @@ export default function App() {
             <div className="pg-node-data" id="nd-3"></div>
           </div>
         </div>
+      </div>
+
+      <div className="pg-cta" id="pg-cta">
+        <p>That whole flow ran in seconds — imagine it handling every real lead you get.</p>
+        <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" className="btn btn-blue">Get this built for your business <span className="arr" aria-hidden="true">→</span></a>
       </div>
     </div>
   </div>
@@ -867,7 +925,7 @@ export default function App() {
       <div className="svc svc-cta">
         <h3 className="t-h3">Not sure where<br/>to start?</h3>
         <p>Book a free 30-min strategy call. We'll tell you exactly which automation gives you the best return first — no commitment required.</p>
-        <a href="https://calendly.com/mariodecentralize/30min" target="_blank" className="btn btn-blue">Book free call <span className="arr" aria-hidden="true">→</span></a>
+        <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" className="btn btn-blue">Book free call <span className="arr" aria-hidden="true">→</span></a>
       </div>
     </div>
   </div>
@@ -919,7 +977,7 @@ export default function App() {
       <div className="bento-box bento-wide" data-tilt data-tilt-max="2" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.05">
         <span className="bento-icon" aria-hidden="true">🌌</span>
         <h3>OpenAI & Claude</h3>
-        <p>We leverage GPT-4o and Claude 3.5 Sonnet to power your custom agents, ensuring they have the deepest reasoning capabilities and fastest response times available worldwide.</p>
+        <p>We build on the latest frontier models from OpenAI and Anthropic, so your custom agents always have the deepest reasoning capabilities and fastest response times available.</p>
         <div className="bento-bg" aria-hidden="true">🧠</div>
       </div>
       <div className="bento-box" data-tilt data-tilt-max="2" data-tilt-speed="400">
@@ -995,7 +1053,7 @@ export default function App() {
           <li><div className="pck" aria-hidden="true">✓</div>Monthly performance tuning</li>
           <li><div className="pck" aria-hidden="true">✓</div>Email support within 48hr</li>
         </ul>
-        <a href="https://whop.com/checkout/plan_5ciITbC6hi77w" target="_blank" className="btn btn-outline" style={{ width: '100%', justifyContent: 'center', transform: 'translateZ(40px)',  }}>Launch Pilot <span className="arr" aria-hidden="true">→</span></a>
+        <a href="https://whop.com/checkout/plan_5ciITbC6hi77w" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ width: '100%', justifyContent: 'center', transform: 'translateZ(40px)',  }}>Launch Pilot <span className="arr" aria-hidden="true">→</span></a>
         
         <div className="whop-secured" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '20px', fontSize: '11px', color: 'var(--ink-4)', letterSpacing: '0.5px', transform: 'translateZ(20px)',  }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -1016,7 +1074,7 @@ export default function App() {
           <li><div className="pck pck-b" aria-hidden="true">✓</div>Quarterly strategy deep-dives</li>
           <li><div className="pck pck-b" aria-hidden="true">✓</div>Priority Slack support</li>
         </ul>
-        <a href="https://whop.com/checkout/plan_7OVA1Y4jMjon8" target="_blank" className="btn btn-blue" style={{ width: '100%', justifyContent: 'center', transform: 'translateZ(40px)',  }}>Start Growing <span className="arr" aria-hidden="true">→</span></a>
+        <a href="https://whop.com/checkout/plan_7OVA1Y4jMjon8" target="_blank" rel="noopener noreferrer" className="btn btn-blue" style={{ width: '100%', justifyContent: 'center', transform: 'translateZ(40px)',  }}>Start Growing <span className="arr" aria-hidden="true">→</span></a>
         
         <div className="whop-secured" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '20px', fontSize: '11px', color: 'var(--ink-4)', letterSpacing: '0.5px', transform: 'translateZ(20px)',  }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -1037,7 +1095,7 @@ export default function App() {
           <li><div className="pck" aria-hidden="true">✓</div>Dedicated AI success manager</li>
           <li><div className="pck" aria-hidden="true">✓</div>24/7 VIP support coverage</li>
         </ul>
-        <a href="https://whop.com/checkout/plan_hpZ0B1wh7sgWx" target="_blank" className="btn btn-white" style={{ width: '100%', justifyContent: 'center', transform: 'translateZ(40px)',  }}>Transform Now <span className="arr" aria-hidden="true">→</span></a>
+        <a href="https://whop.com/checkout/plan_hpZ0B1wh7sgWx" target="_blank" rel="noopener noreferrer" className="btn btn-white" style={{ width: '100%', justifyContent: 'center', transform: 'translateZ(40px)',  }}>Transform Now <span className="arr" aria-hidden="true">→</span></a>
         
         <div className="whop-secured" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '20px', fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.5px', transform: 'translateZ(20px)',  }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -1053,6 +1111,10 @@ export default function App() {
         <div className="g-body">If the automation we build doesn't perform as promised after we've done our best to fix it, we'll refund your full setup fee. No questions asked, no awkward conversations, no small print.</div>
       </div>
     </div>
+
+    <p className="talk-first">
+      Not ready to buy today? <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer">Book a free strategy call first →</a>
+    </p>
 
     <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: 'var(--ink-3)',  }}>
       Need just one service?&nbsp;<a href="#services" style={{ color: 'var(--blue-l)', textDecoration: 'none', borderBottom: '1px solid rgba(123,148,255,0.3)', paddingBottom: '1px',  }}>Browse individual services →</a>
@@ -1074,7 +1136,7 @@ export default function App() {
       </div>
       <div className="faq-item">
         <h4>How long does it take to go live?</h4>
-        <p>Most projects go live within 7–14 business days from your discovery call. The Scale package takes up to 21 days. You'll receive regular progress updates throughout the build.</p>
+        <p>Most projects go live within 7–14 business days from your discovery call. The Enterprise package takes up to 21 days. You'll receive regular progress updates throughout the build.</p>
       </div>
       <div className="faq-item">
         <h4>What if it doesn't work for my business?</h4>
@@ -1093,6 +1155,11 @@ export default function App() {
         <p>Clinics, gyms, restaurants, real estate agencies, coaches, marketing agencies, and e-commerce brands. If you have repetitive tasks and customer touchpoints, we can automate them.</p>
       </div>
     </div>
+
+    <div className="faq-cta" data-s>
+      <p>Still have questions? Get them answered by a human, for free.</p>
+      <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" className="btn btn-blue">Ask us on a free call <span className="arr" aria-hidden="true">→</span></a>
+    </div>
   </div>
 </section>
 
@@ -1110,11 +1177,17 @@ export default function App() {
     </p>
     <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap',  }} data-s>
       <a href="#pricing" className="btn btn-white btn-lg">See packages <span className="arr" aria-hidden="true">→</span></a>
-      <a href="https://calendly.com/mariodecentralize/30min" target="_blank" className="btn btn-blue btn-lg">Book free strategy call</a>
+      <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" className="btn btn-blue btn-lg">Book free strategy call</a>
     </div>
   </div>
 </div>
 </main>
+
+{/* ── STICKY MOBILE CTA ── */}
+<div className="sticky-cta" id="sticky-cta">
+  <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer" className="btn btn-white btn-sm">Book free call</a>
+  <a href="#pricing" className="btn btn-outline btn-sm">See pricing</a>
+</div>
 
 {/* ── FOOTER ── */}
 <footer>
@@ -1124,9 +1197,9 @@ export default function App() {
       <a href="#services">Services</a>
       <a href="#process">Process</a>
       <a href="#pricing">Pricing</a>
-      <a href="https://calendly.com/mariodecentralize/30min" target="_blank">Book a Call</a>
+      <a href="https://calendly.com/mariodecentralize/30min" target="_blank" rel="noopener noreferrer">Book a Call</a>
     </nav>
-    <span className="footer-copy">© 2025 AgentCy · Built with AI</span>
+    <span className="footer-copy">© 2026 AgentCy · Built with AI</span>
   </div>
 </footer>
 
