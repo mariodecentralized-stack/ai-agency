@@ -1653,3 +1653,35 @@ footer {
 }
 .ai-teaser.show { opacity:1; transform:none; pointer-events:auto; }
 .ai-teaser:hover { background:var(--bg-3); }
+
+/* ─────────────────────────────────────────
+   PREMIUM POLISH
+───────────────────────────────────────── */
+::selection { background:rgba(94,234,212,0.28); color:#fff; }
+
+::-webkit-scrollbar { width:10px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb {
+  background:var(--bg-3); border-radius:8px;
+  border:2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background:#1A2144; }
+html { scrollbar-width:thin; scrollbar-color:#141935 var(--bg); }
+
+/* Anchor links land below the fixed nav */
+html { scroll-padding-top:88px; }
+
+/* Subtle film grain over everything */
+body::after {
+  content:''; position:fixed; inset:0; z-index:2000;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Footer about line */
+.footer-about {
+  max-width:640px; margin:0 auto;
+  padding:32px 24px 0;
+  text-align:center;
+  font-size:13px; line-height:1.7; color:var(--ink-3);
+}

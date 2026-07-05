@@ -1191,6 +1191,9 @@ export default function App() {
 
 {/* ── FOOTER ── */}
 <footer>
+  <p className="footer-about">
+    AgentCy is an AI automation agency helping small and mid-sized businesses deploy custom AI chatbots, voice AI agents, automated lead follow-up, and content workflows — fully built for you and live in 7–14 days.
+  </p>
   <div className="footer-inner">
     <a href="#" className="nav-logo" aria-label="AgentCy — back to top" style={{ fontSize: '16px',  }}>Agent<em className="logo-accent">Cy</em></a>
     <nav className="footer-links" aria-label="Footer navigation">
