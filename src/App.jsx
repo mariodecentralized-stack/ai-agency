@@ -1072,7 +1072,7 @@ export default function App() {
           <li><div className="pck pck-b" aria-hidden="true">✓</div>Multi-channel integration (CRM, SMS)</li>
           <li><div className="pck pck-b" aria-hidden="true">✓</div>Advanced lead qualification logic</li>
           <li><div className="pck pck-b" aria-hidden="true">✓</div>Quarterly strategy deep-dives</li>
-          <li><div className="pck pck-b" aria-hidden="true">✓</div>Priority Slack support</li>
+          <li><div className="pck pck-b" aria-hidden="true">✓</div>24/7 WhatsApp support</li>
         </ul>
         <a href="https://whop.com/checkout/plan_7OVA1Y4jMjon8" target="_blank" rel="noopener noreferrer" className="btn btn-blue" style={{ width: '100%', justifyContent: 'center', transform: 'translateZ(40px)',  }}>Start Growing <span className="arr" aria-hidden="true">→</span></a>
         
