@@ -1169,11 +1169,11 @@ export default function App() {
   <div className="final-beam" aria-hidden="true"></div>
   <div className="wrap" style={{ position: 'relative', zIndex: '1',  }}>
     <h2 className="t-h2 final-title" id="cta-heading" data-s>
-      <span className="g1">Stop paying humans</span><br/>
-      <span className="g2">for what AI does better.</span>
+      <span className="g1">Let AI do the busywork.</span><br/>
+      <span className="g2">Let your people do their best work.</span>
     </h2>
     <p className="t-body final-sub" data-s>
-      Book a free 30-minute strategy call. We'll show you exactly which agent gives you the fastest return — and how much you'll save in month one.
+      Book a free 30-minute strategy call. We'll show you which tasks to hand to AI first — and how much time and money you'll get back in month one.
     </p>
     <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap',  }} data-s>
       <a href="#pricing" className="btn btn-white btn-lg">See packages <span className="arr" aria-hidden="true">→</span></a>
