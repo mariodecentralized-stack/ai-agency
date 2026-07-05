@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aibymario.com/sitemap.xml
+Sitemap: https://agentcy.live/sitemap.xml
